@@ -1,9 +1,9 @@
 /**
  * Copyright 2008 Google Inc. All Rights Reserved.
- * 
+ *
  * Tests converting Cascading Style Sheets from LTR to RTL.
  * This is a series of CSS test cases for cssjanus.py
- * 
+ *
  * @author "Trevor Parscal" <trevorparscal@gmail.com>
  * @author "Lindsey Simon" <elsigh@google.com>
  */
@@ -12,7 +12,7 @@ var assert = require( 'assert' ),
 
 /**
  * Flips a stylesheet.
- * 
+ *
  * @function
  * @param {String} code Stylesheet to flip
  * @param {Boolean} swapLtrRtlInUrl Swap "ltr" and "rtl" in CSS URLs
@@ -24,13 +24,13 @@ function flip( code, swapLtrRtlInUrl, swapLeftRightInUrl ) {
 }
 
 var styles = {
-    'ok': [32, 39],
-    'error': [31, 39]
+    ok: [32, 39],
+    error: [31, 39]
 };
 
 /**
  * Gets a version of a string with console styling applied, if supported.
- * 
+ *
  * @function
  * @param {String} text Text to color
  * @param {String} style Symbolic name of style to apply
@@ -96,8 +96,8 @@ var tests = {
 			'padding: 1px 2px 3px auto'
 		);
 		assert.equal(
-			flip( 'padding: 1px auto 3px inherit' ),
-			'padding: 1px inherit 3px auto'
+			flip( 'padding: 1px auto 3px inherit !important' ),
+			'padding: 1px inherit 3px auto !important'
 		);
 		// not really four notation
 		assert.equal(
@@ -426,17 +426,17 @@ var tests = {
 			flip( 'a.left:hover { float: right }' ),
 			'a.left:hover { float: left }'
 		);
-		//tests newlines
+		// Tests newlines
 		assert.equal(
 			flip( '#bright-left,\n.test-me { float: right }' ),
 			'#bright-left,\n.test-me { float: left }'
 		);
-		//tests newlines
+		// Tests newlines
 		assert.equal(
 			flip( '#bright-left, .test-me { float: right }' ),
 			'#bright-left, .test-me { float: left }'
 		);
-		//tests multiple names and commas
+		// Tests multiple names and commas
 		assert.equal(
 			flip( 'div.leftpill, div.leftpillon {margin-left: 0 !important}' ),
 			'div.leftpill, div.leftpillon {margin-right: 0 !important}'
@@ -521,6 +521,36 @@ var tests = {
 			flip( 'border-radius: 5px' ),
 			'border-radius: 5px'
 		);
+		assert.equal(
+			flip( 'border-radius: 5px 9px 7px' ),
+			'border-radius: 9px 5px 9px 7px'
+		);
+		// Test horizontal / vertical radius rules
+		assert.equal(
+			flip( 'border-radius: 15px / 0 20px' ),
+			'border-radius: 15px / 20px 0'
+		);
+		assert.equal(
+			flip( 'border-radius: 15px 40px / 20px 15px' ),
+			'border-radius: 40px 15px / 15px 20px'
+		);
+		assert.equal(
+			flip( 'border-radius: 5px 9px 7px / 3px 4px' ),
+			'border-radius: 9px 5px 9px 7px / 4px 3px'
+		);
+		assert.equal(
+			flip( 'border-radius: 10px / 20px' ),
+			'border-radius: 10px / 20px'
+		);
+		// Test correct position of !important after flip
+		assert.equal(
+			flip( 'div { border-radius: 0 !important }' ),
+			'div { border-radius: 0 !important }'
+		);
+		assert.equal(
+			flip( 'div { border-radius: 8px 7px !important }' ),
+			'div { border-radius: 7px 8px !important }'
+		);
 	},
 	'flips gradient notation': function() {
 		assert.equal(
@@ -542,13 +572,16 @@ for ( var msg in tests ) {
 		console.log( applyStyle( '  ✓ ' + msg, 'ok' ) );
 	} catch ( e ) {
 		console.log( applyStyle('  ✗ ' + msg, 'error' ) );
+		console.log( e.stack );
 		failures++;
 	}
 }
 if ( failures === 1 ) {
 	console.log( applyStyle( '1 test failed', 'error' ) );
+	process.exit( 1 );
 } else if ( failures > 1 ) {
 	console.log( applyStyle( failures + ' tests failed', 'error' ) );
+	process.exit( 1 );
 } else {
 	console.log( applyStyle( 'All tests passed', 'ok' ) );
 }

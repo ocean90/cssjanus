@@ -1,10 +1,13 @@
-[![build status](https://secure.travis-ci.org/trevorparscal/cssjanus.png)](http://travis-ci.org/trevorparscal/cssjanus)
+[![Build Status](https://travis-ci.org/cssjanus/cssjanus.svg?branch=master)](https://travis-ci.org/cssjanus/cssjanus) [![NPM version](https://badge.fury.io/js/cssjanus.svg)](http://badge.fury.io/js/cssjanus)
+
 # CSSJanus
 
-Converts CSS stylesheets between left-to-right and right-to-left. This is a JavaScript port for Node.js of [CSSJanus](http://code.google.com/p/cssjanus/), which is written in python.
+Converts CSS stylesheets between left-to-right and right-to-left. This is a JavaScript port for Node.js of [CSSJanus](https://code.google.com/p/cssjanus/), which is written in python.
 
 ## Install
-    npm install cssjanus
+```sh
+npm install cssjanus
+```
 
 ## Basic usage
 ```javascript
@@ -23,15 +26,17 @@ var rtlCss = cssjanus.transform( ltrCss );
 ### Preventing flipping
 Use a ```/* @noflip */``` comment to protect a rule from being changed.
 
-    .rule1 {
-      /* Will be converted to margin-right */
-      margin-left: 1em;
-    }
-    /* @noflip */
-    .rule2 {
-      /* Will be preserved as margin-left */
-      margin-left: 1em;
-    }
+```css
+.rule1 {
+  /* Will be converted to margin-right */
+  margin-left: 1em;
+}
+/* @noflip */
+.rule2 {
+  /* Will be preserved as margin-left */
+  margin-left: 1em;
+}
+```
 
 ### Additional Resources
 * [Interactive demo](http://cssjanus.commoner.com/)
